@@ -102,12 +102,6 @@ namespace Least_Significant_Bit_Steganography
                         fileBytes[byteIndex] = BitModifier.SetBit(fileBytes[byteIndex], bitIndex, value);
 
                         bitIndex += 1;
-
-
-                        if (bitCounter == 0)
-                        {
-                            Console.WriteLine("{0}: {1}", x, value);
-                        }
                     }
                 }
 
@@ -145,6 +139,14 @@ namespace Least_Significant_Bit_Steganography
                     carrierImage.SetPixel(x, 0, newColor);
                 }
 
+                // 32 is the lengh of our "file length" starter variable.
+                // Since each byte is 8 bits, we will be ensuring that we have enough storage 
+                // space in our image (width * height) to store the file.
+                if (32 + (hiddenFile.Length * 8) > (carrierImage.Width * carrierImage.Height))
+                {
+                    throw new Exception("The file we are hiding is too large for this image.");
+                }
+
                 int bitCounter = 0;
                 // Hide file into image
                 for (int y = 0; y < carrierImage.Height && finished == false; y++)
@@ -173,11 +175,6 @@ namespace Least_Significant_Bit_Steganography
 
                         byte hiddenFileBit = hiddenFile[byteIndex];
                         bool value = BitModifier.GetBit(hiddenFileBit, bitIndex);
-
-                        if(bitCounter == 0)
-                        {
-                            Console.WriteLine("{0}: {1}", x, value);
-                        }
 
                         int color = BitModifier.SetBit(c.ToArgb(), 0, value);
 
